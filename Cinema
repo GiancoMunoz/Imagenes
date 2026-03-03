@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focal Home Cinema | Master Investment Catalog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #c5a059;
+            --zinc-950: #09090b;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, th {
+            font-family: 'Playfair Display', serif;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2.5rem;
+        }
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            border-radius: 12px;
+            background: #fff;
+            cursor: pointer;
+        }
+        .product-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.08);
+            transform: translateY(-8px);
+        }
+        .img-container {
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            background-color: #f8f8f8;
+            margin-bottom: 2rem;
+            border-radius: 6px;
+        }
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .product-card:hover .img-container img {
+            transform: scale(1.08);
+        }
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 0.8rem;
+        }
+        .view-toggle .toggle-btn.active {
+            background: #fff;
+            color: var(--accent);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        /* Modal Styles */
+        #details-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .modal-content {
+            background: white;
+            max-width: 850px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        table tr { cursor: pointer; transition: background 0.2s; }
+        table tr:hover { background-color: #faf7f0 !important; }
+
+        .brand-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
+        .tag-astral { background: #18181b; color: #fff; }
+        .tag-denon { background: #e11d48; color: #fff; }
+        .tag-marantz { background: #c5a059; color: #fff; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <main class="max-w-7xl mx-auto px-6 py-12 md:px-12 md:py-24">
+        
+        <header class="mb-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-zinc-100 pb-12">
+                <div class="max-w-3xl">
+                    <h1 class="text-5xl md:text-8xl font-bold tracking-tight mb-8 leading-[0.9]">
+                        Home Cinema <br><span class="italic font-normal text-zinc-400">Investment</span>
+                    </h1>
+                    <p class="text-zinc-500 font-light text-xl md:text-2xl leading-relaxed">
+                        A professional comparison of curated 7.2.4 turnkey configurations.
+                    </p>
+                </div>
+                <div class="flex flex-col items-end gap-4">
+                    <div class="flex bg-zinc-100 p-1 rounded-lg view-toggle">
+                        <button onclick="switchView('gallery')" id="btn-gallery" class="px-5 py-2 text-[10px] font-bold uppercase tracking-widest rounded-md active transition-all">Gallery</button>
+                        <button onclick="switchView('table')" id="btn-table" class="px-5 py-2 text-[10px] font-bold uppercase tracking-widest rounded-md transition-all">Table</button>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-[10px] text-zinc-400 uppercase tracking-[0.4em] mb-1">Estimated Investment</span>
+                        <span class="text-lg font-semibold text-[#c5a059] uppercase tracking-[0.2em]">USD • Before VAT</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Gallery Container -->
+        <div id="gallery-view" class="gallery-grid">
+            <!-- Dynamic Render -->
+        </div>
+
+        <!-- Table Container -->
+        <div id="table-view" class="hidden overflow-x-auto border border-zinc-100 rounded-xl">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-zinc-50 border-b-2 border-zinc-900">
+                        <th class="p-6 text-[10px] uppercase tracking-widest">Level</th>
+                        <th class="p-6 text-[10px] uppercase tracking-widest">System / Processor</th>
+                        <th class="p-6 text-[10px] uppercase tracking-widest text-right">Labor</th>
+                        <th class="p-6 text-[10px] uppercase tracking-widest text-right">Equipment</th>
+                        <th class="p-6 text-[10px] uppercase tracking-widest text-right">Speakers</th>
+                        <th class="p-6 text-[10px] uppercase tracking-widest text-right">Video</th>
+                        <th class="p-6 text-[10px] uppercase tracking-widest text-right">Total USD</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Dynamic Render -->
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="mt-40 border-t border-zinc-100 pt-20 pb-32 flex flex-col items-center">
+            <div class="w-12 h-[1px] bg-[#c5a059] mb-8"></div>
+            <p class="text-[10px] uppercase tracking-[0.8em] text-zinc-400 mb-6">Focal-JM Lab | France</p>
+            <p class="text-[11px] text-zinc-400 italic text-center max-w-2xl leading-relaxed">
+                * Figures are approximate and may vary based on structural complexity, cabling distances, and acoustic calibration. 
+                Processing systems powered by <strong>Focal Astral 16</strong> (Ultra-Reference), <strong>Marantz Cinema Series</strong>, and <strong>Denon AVR</strong>.
+            </p>
+        </footer>
+    </main>
+
+    <!-- Floating Modal -->
+    <div id="details-modal" class="hidden" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div id="modal-body">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, level: "01", name: "Utopia III Evo", processor: "Focal Astral 16", brand: "astral", desc: "The global pinnacle of audio. Pure Beryllium technology and exquisite bespoke finishes for an unmatched acoustic landscape.", labor: 5247.44, infra: 40850, speakers: 136125, video: 18200, img: "https://media.focal-naim.com/focal/file_manager_files/home/utopia-1/utopia-grande.jpg" },
+            { id: 2, level: "02", name: "1000 Utopia (IW)", processor: "Focal Astral 16", brand: "astral", desc: "Architectural excellence. Utopia performance fully integrated into the walls for high-performance theaters that remain invisible.", labor: 4872.62, infra: 40850, speakers: 57243, video: 18200, img: "https://media.focal-naim.com/focal/file_manager_files/home/1000-series/1000-iwlcr-utopia-front.png" },
+            { id: 3, level: "03", name: "Sopra Series", processor: "Focal Astral 16", brand: "astral", desc: "Design purity meets cutting-edge technology. Delivers a precise soundstage and incredible dynamic control.", labor: 3748.17, infra: 40850, speakers: 47624, video: 18200, img: "https://media.focal-naim.com/focal/file_manager_files/menus/enceintes-haute-fidelite/enceintes-acoustiques-65e714e5b3ef4.jpg" },
+            { id: 4, level: "04", name: "Kanta Series", processor: "Focal Astral 16", brand: "astral", desc: "Featuring flax diaphragms and an organic design language. A unique musical personality with high emotional impact.", labor: 3748.17, infra: 40850, speakers: 30097, video: 18200, img: "https://media.focal-naim.com/focal/file_manager_files/menus/enceintes-haute-fidelite/home-cinema-kanta.jpg" },
+            { id: 5, level: "05", name: "Aria Evo X (Astral)", processor: "Focal Astral 16", brand: "astral", desc: "The evolved legend. Expressive listening with incredible detail, driven by the reference Astral 16 processor.", labor: 3748.17, infra: 40850, speakers: 16890, video: 18200, img: "https://media.focal-naim.com/focal/file_manager_files/home/aria-evo-x/aria-mossgreen-illus-02-cream-grande.jpg" },
+            { id: 6, level: "07", name: "300 Series", processor: "Denon AVR High-End", brand: "denon", desc: "Powerful architectural audio. Versatile integration that disappears into the decor while providing a stunning stage.", labor: 3748.17, infra: 9950, speakers: 14350, video: 18200, img: "https://media.focal-naim.com/focal/file_manager_files/menus/systemes-integres/reseidentiel.jpg" },
+            { id: 7, level: "08", name: "Vestia Series", processor: "Marantz Cinema Series", brand: "marantz", desc: "Dynamic emotion and refined design. Timbre-matched models designed for immersive multi-channel cinematic audio.", labor: 3748.17, infra: 9950, speakers: 11442, video: 18200, img: "https://media.focal-naim.com/focal/file_manager_files/home/vestia-1/vestian2-bhg-home-cine-03-grande.jpg" },
+            { id: 8, level: "11", name: "Dome Flax", processor: "Marantz / Denon", brand: "marantz", desc: "A high-tech masterpiece. Precision sound in a jewel-like package, ideal for high-design living spaces.", labor: 3748.17, infra: 9950, speakers: 8200, video: 18200, img: "https://media.focal-naim.com/focal/file_manager_files/home/dome/dome-flax/dome-02-grande.jpg" },
+            { id: 9, level: "12", name: "Sib Evo", processor: "Denon Entry", brand: "denon", desc: "The entry point to atmospheric cinema. Punchy dynamics and clear effects for a sensational Dolby Atmos® experience.", labor: 3748.17, infra: 9950, speakers: 5212, video: 7450, img: "https://media.focal-naim.com/focal/file_manager_files/home/sib-evo/sib-evo-grande.jpg" }
+        ];
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+        }
+
+        function renderContent() {
+            const gallery = document.getElementById('gallery-view');
+            const tableBody = document.getElementById('table-body');
+
+            products.forEach(p => {
+                const total = p.labor + p.infra + p.speakers + p.video;
+                
+                // Gallery
+                gallery.innerHTML += `
+                    <div class="product-card" onclick="openProduct(${p.id})">
+                        <div class="img-container">
+                            <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/800x500/f8f8f8/1a1a1a?text=${p.name}'">
+                        </div>
+                        <span class="flex items-center text-[10px] uppercase tracking-[0.3em] font-bold text-[#c5a059] mb-3">
+                            Level ${p.level} | ${p.processor}
+                        </span>
+                        <h3 class="text-3xl font-bold mb-4">${p.name}</h3>
+                        <p class="text-zinc-500 text-sm font-light mb-8 line-clamp-2 leading-relaxed">${p.desc}</p>
+                        <div class="mt-auto pt-6 border-t border-zinc-900">
+                            <span class="text-[10px] uppercase tracking-widest text-zinc-400 mb-1 block">Total Investment</span>
+                            <div class="text-2xl font-bold">${formatCurrency(total)}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Table
+                tableBody.innerHTML += `
+                    <tr onclick="openProduct(${p.id})" class="border-b border-zinc-100">
+                        <td class="p-6 font-mono text-xs text-zinc-400">${p.level}</td>
+                        <td class="p-6">
+                            <div class="font-bold text-zinc-900">${p.name}</div>
+                            <div class="text-[10px] uppercase tracking-widest text-[#c5a059] font-bold">${p.processor}</div>
+                        </td>
+                        <td class="p-6 text-right text-zinc-500 text-sm">${formatCurrency(p.labor)}</td>
+                        <td class="p-6 text-right text-zinc-500 text-sm">${formatCurrency(p.infra)}</td>
+                        <td class="p-6 text-right text-zinc-500 text-sm">${formatCurrency(p.speakers)}</td>
+                        <td class="p-6 text-right text-zinc-500 text-sm">${formatCurrency(p.video)}</td>
+                        <td class="p-6 text-right font-bold text-zinc-900">${formatCurrency(total)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function switchView(view) {
+            const gallery = document.getElementById('gallery-view');
+            const table = document.getElementById('table-view');
+            const btnG = document.getElementById('btn-gallery');
+            const btnT = document.getElementById('btn-table');
+
+            if (view === 'gallery') {
+                gallery.classList.remove('hidden');
+                table.classList.add('hidden');
+                btnG.classList.add('active');
+                btnT.classList.remove('active');
+            } else {
+                gallery.classList.add('hidden');
+                table.classList.remove('hidden');
+                btnG.classList.remove('active');
+                btnT.classList.add('active');
+            }
+        }
+
+        function openProduct(id) {
+            const p = products.find(item => item.id === id);
+            const total = p.labor + p.infra + p.speakers + p.video;
+            const modal = document.getElementById('details-modal');
+            const body = document.getElementById('modal-body');
+
+            body.innerHTML = `
+                <div class="relative">
+                    <button onclick="closeModal()" class="absolute top-6 right-6 z-10 bg-white/90 backdrop-blur-md rounded-full p-2 hover:bg-white shadow-sm transition-all">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <div class="grid md:grid-cols-2">
+                        <div class="h-80 md:h-auto overflow-hidden">
+                            <img src="${p.img}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-10 md:p-16">
+                            <span class="inline-block text-[10px] uppercase tracking-[0.3em] text-[#c5a059] font-bold mb-4">Level ${p.level} Specification</span>
+                            <h2 class="text-4xl font-bold mb-6">${p.name}</h2>
+                            <p class="text-zinc-500 font-light mb-10 leading-relaxed">${p.desc}</p>
+                            
+                            <div class="space-y-4 mb-10">
+                                <h4 class="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400 border-b border-zinc-100 pb-3">Investment Breakdown</h4>
+                                <div class="cost-row"><span>Labor, Design & Integration</span><span>${formatCurrency(p.labor)}</span></div>
+                                <div class="cost-row"><span>Infrastructure & Processing (<strong>${p.processor}</strong>)</span><span>${formatCurrency(p.infra)}</span></div>
+                                <div class="cost-row"><span>Focal 7.2.4 Speaker System</span><span>${formatCurrency(p.speakers)}</span></div>
+                                <div class="cost-row"><span>Professional 4K Video Chain</span><span>${formatCurrency(p.video)}</span></div>
+                                <div class="pt-6 flex justify-between items-end">
+                                    <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Total Investment</span>
+                                    <span class="text-4xl font-bold text-zinc-900">${formatCurrency(total)}</span>
+                                </div>
+                                <p class="text-[10px] text-[#c5a059] font-bold text-right tracking-widest">NET PRICE EXCLUDING VAT</p>
+                            </div>
+
+                            <div class="bg-zinc-50 p-8 rounded-xl">
+                                <p class="text-[11px] text-zinc-400 leading-relaxed italic">
+                                    Technical Note: This configuration utilizes state-of-the-art <strong>${p.brand.toUpperCase()}</strong> processing, 
+                                    ensuring absolute fidelity and full support for object-based formats like Dolby Atmos and DTS:X.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(e) {
+            const modal = document.getElementById('details-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onload = renderContent;
+    </script>
+</body>
+</html>
